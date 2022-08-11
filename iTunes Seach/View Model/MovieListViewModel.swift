@@ -23,14 +23,20 @@ class MovieListViewModel: ObservableObject {
     init() {
 
         $searchTerm
+            .removeDuplicates()
             .dropFirst()
             .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
             .sink { [weak self] term in
-                self?.state = .good
-                self?.movies = []
+                self?.clear()
                 self?.fetchMovies(for: term)
             }.store(in: &subscriptions)
         
+    }
+    
+    func clear() {
+        state = .good
+        movies = []
+//        page = 0
     }
     
     func fetchMovies(for searchTerm: String) {
@@ -57,7 +63,7 @@ class MovieListViewModel: ObservableObject {
                             self?.state = .loadedAll
                         }
                       
-                        print("fetched \(results.resultCount) - \(results.results.count)")
+                        print("Fetched Movies: \(results.resultCount) - \(results.results.count)")
                         
                     case .failure(let error):
                         print("error loading movies: \(error)")

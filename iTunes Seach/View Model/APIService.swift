@@ -7,13 +7,6 @@
 
 import Foundation
 
-// The entity type we are looking for
-enum EntityType: String {
-    case album
-    case song
-    case movie
-}
-
 class APIService {    
     func fetchAlbums(searchTerm: String, page: Int, limit: Int, completion: @escaping(Result<AlbumResult,APIError>) -> Void) {
         let url = createURL(for: searchTerm, type: .album, page: page, limit: limit)

@@ -14,7 +14,7 @@ struct AlbumSearchView: View {
         NavigationView {
             Group {
                 if vm.searchTerm.isEmpty {
-                    AlbumPlaceholderView(searchTerm: $vm.searchTerm)
+                    SearchPlaceholderView(searchTerm: $vm.searchTerm)
                 } else {
                     AlbumListView(vm: vm)
                 }
@@ -28,27 +28,5 @@ struct AlbumSearchView: View {
 struct AlbumSearchView_Previews: PreviewProvider {
     static var previews: some View {
         AlbumSearchView()
-    }
-}
-
-struct AlbumPlaceholderView: View {
-    @Binding var searchTerm: String
-    let suggestions = ["Country", "Heavy Metal", "Jazz", "Soft Rock"]
-
-    var body: some View {
-        VStack {
-            Text("Search Suggestions")
-                .font(.title)
-                .padding(20)
-            
-            ForEach(suggestions, id: \.self) { text in
-                Button(action: { searchTerm = text }, label: {
-                    Text(text)
-                        .font(.title2)
-                })
-            }
-            
-            Spacer()
-        }
     }
 }
