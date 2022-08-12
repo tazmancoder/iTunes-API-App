@@ -13,7 +13,7 @@ struct AlbumListView: View {
     var body: some View {
         List {
             ForEach(vm.albums) { album in
-                Text(album.collectionName)
+                AlbumRowView(album: album)
             }
             
             switch vm.state {

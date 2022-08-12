@@ -13,15 +13,84 @@ struct SearchAllListView: View {
     @ObservedObject var songListVM: SongListViewModel
 
     var body: some View {
-        Text("Search All")
-        Text("Albums Count: \(albumListVM.albums.count)")
-        Text("Movies Count: \(movieListVM.movies.count)")
-        Text("Songs Count: \(songListVM.songs.count)")
+        ScrollView {
+            LazyVStack {
+                HStack {
+                    Text("Songs")
+                        .font(.body)
+
+                    Spacer()
+                    
+                    NavigationLink(destination: SongListVIew(vm: songListVM)) {
+                        HStack {
+                            Text("See All")
+                            Image(systemName: "chevron.right")
+                                .offset(x: -9)
+                                .scaleEffect(0.8)
+                        }
+                        .foregroundColor(.gray)
+                    }
+                }
+                .font(.caption)
+                .padding(.horizontal)
+                
+                SongSectionView(songs: songListVM.songs)
+                
+                Divider()
+                    .padding(.bottom)
+                
+                HStack {
+                    Text("Albums")
+                        .font(.body)
+                    
+                    Spacer()
+                    
+                    NavigationLink(destination: AlbumListView(vm: albumListVM)) {
+                        HStack {
+                            Text("See All")
+                            Image(systemName: "chevron.right")
+                                .offset(x: -9)
+                                .scaleEffect(0.8)
+
+                        }
+                        .foregroundColor(.gray)
+                    }
+                }
+                .font(.caption)
+                .padding(.horizontal)
+                
+                AlbumSectionView(albums: albumListVM.albums)
+                
+                Divider()
+                    .padding(.bottom)
+                
+                HStack {
+                    Text("Movies")
+                        .font(.body)
+
+                    Spacer()
+                    
+                    NavigationLink(destination: MovieListView(vm: movieListVM)) {
+                        HStack {
+                            Text("See All")
+                            Image(systemName: "chevron.right")
+                                .offset(x: -9)
+                                .scaleEffect(0.8)
+                        }
+                        .foregroundColor(.gray)
+                    }
+                }
+                .font(.caption)
+                .padding(.horizontal)
+                
+                MovieSectionView(movies: movieListVM.movies)
+            }
+        }
     }
 }
 
-//struct SearchAllListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SearchAllListView()
-//    }
-//}
+struct SearchAllListView_Previews: PreviewProvider {
+    static var previews: some View {
+        SearchAllListView(albumListVM: AlbumListViewModel.example(), movieListVM: MovieListViewModel.example(), songListVM: SongListViewModel.example())
+    }
+}
