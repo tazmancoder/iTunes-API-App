@@ -16,22 +16,7 @@ struct MovieListView: View {
                 MovieRowView(movie: movie)
             }
             
-            switch vm.state {
-                case .good:
-                    Color.clear
-                        .onAppear {
-                            vm.loadMore()
-                        }
-                case .isLoading:
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .frame(maxWidth: .infinity)
-                case .loadedAll:
-                    EmptyView()
-                case .error(let message):
-                    Text(message)
-                        .foregroundColor(.pink)
-            }
+            ListPlaceholderRowView(state: vm.state, loadMore: vm.loadMore)
         }
         .listStyle(.plain)
     }

@@ -9,59 +9,129 @@ import SwiftUI
 
 struct SongsForAlbumListView: View {
     @ObservedObject var songsVM: SongsForAlbumListViewModel
+    let selectedSong: Song?
     
     var body: some View {
-        ScrollView {
-            if songsVM.state == .isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-            } else {
-                #warning("Make Changes to use Grid once the new Xcode comes out")
-                // When using iOS 16 use replace VStack with Grid
-//                Grid(horizontalSpacing: 20) {
-                VStack(alignment: .leading, spacing: 20) {
-                    ForEach(songsVM.songs) { song in
-                        // When using iOS 16 replace HStack with GridRow
-//                        GridRow {
-                        HStack {
-                            Text("\(song.trackNumber).")
-                                .font(.footnote)
-                            // When using iOS 16 replace frame with .gridColumnAlignment
-//                                .gridColumnAlignment(.tailing)
-                                .frame(width: 25, alignment: .trailing)
-                            
-                            Text(song.trackName)
-//                                .gridColumnAlignment(.tailing)
-
-                            Spacer()
-                            Text(formatTime(time: song.trackTimeMillis))
-                                .font(.footnote)
-                            // When using iOS 16 remove the frame from here
-                                .frame(width: 50, alignment: .center)
-
-                            BuySongButton(urlString: song.previewURL, price: song.trackPrice, currency: song.currency)
+        ScrollViewReader { proxy in
+            ScrollView {
+                if songsVM.state == .isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                } else if songsVM.songs.count > 0 {
+                    Group {
+                        if #available(iOS 16.0, *) {
+                            SongsGridView(songs: songsVM.songs, selectedSong: selectedSong)
+                        } else {
+                            SongStackView(songs: songsVM.songs, selectedSong: selectedSong)
                         }
-                        Divider()
+                    }
+                    .padding(.top, 30)
+                    
+                    .onAppear {
+                        if let song = selectedSong {
+                            withAnimation {
+                                proxy.scrollTo(song.trackNumber, anchor: .center)
+                            }
+                        }
                     }
                 }
-                .padding([.vertical, .trailing])
             }
         }
     }
+}
+
+@available(iOS 16.0, *)
+struct SongsGridView: View {
     
-    func formatTime(time: Int) -> String {
-        let timeInSeconds = time / 1000
-        let interval = TimeInterval(timeInSeconds)
-        let df = DateComponentsFormatter()
-        
-        df.zeroFormattingBehavior = .pad
-        df.allowedUnits = [.minute, .second]
-        df.unitsStyle = .positional
-        
-        return df.string(from: interval) ?? ""
+    let songs: [Song]
+    let selectedSong: Song?
+    
+    var body: some View {
+        #warning("Uncomment as soon os iOS 16 comes out")
+        Text("REMOVE AS SOON AS iOS 16 COMES OUT")
+//        Grid(horizontalSpacing: 20) {
+//            ForEach(songs) { song in
+//                GridRow {
+//                    Text("\(song.trackNumber)")
+//                        .font(.footnote)
+//                        .gridColumnAlignment(.trailing)
+//
+//                    Text(song.trackName)
+//                        .lineLimit(2)
+//                        .gridColumnAlignment(.leading)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//
+//                    Text(formattedDuration(time: song.trackTimeMillis))
+//                        .font(.footnote)
+//
+//                    BuySongButton(urlString: song.previewURL,
+//                                  price: song.trackPrice,
+//                                  currency: song.currency)
+//                    .padding(.trailing)
+//                }
+//                .foregroundColor(selectedSong?.id == song.id ? Color.accentColor : Color.black)
+//                .id(song.trackNumber)
+//
+//                Divider()
+//                    .gridCellUnsizedAxes(.horizontal)
+//
+//            }
+//        }
+//        .padding([.bottom, .leading])
     }
 }
 
+struct SongStackView: View {
+    
+    let songs: [Song]
+    let selectedSong: Song?
+    
+    var body: some View {
+        VStack(spacing: 10) {
+            ForEach(songs) { song in
+                HStack(spacing: 10) {
+                    Text("\(song.trackNumber)")
+                        .font(.footnote)
+                        .frame(width: 25, alignment: .trailing)
+                    
+                    Text(song.trackName)
+                        .lineLimit(2)
+                    
+                    Spacer()
+                    
+                    Text(formattedDuration(time: song.trackTimeMillis))
+                        .font(.footnote)
+                        .frame(width: 40)
+                    
+                    BuySongButton(urlString: song.previewURL,
+                                  price: song.trackPrice,
+                                  currency: song.currency)
+                    
+                    .padding(.trailing)
+                }
+                .foregroundColor(selectedSong?.id == song.id ? Color.accentColor : Color.black)
+                //.padding(.bottom, 10)
+                .id(song.trackNumber)
+                
+                Divider()
+            }
+        }
+    }
+}
+
+
+fileprivate func formattedDuration(time: Int) -> String {
+    
+    let timeInSeconds = time / 1000
+    
+    let interval = TimeInterval(timeInSeconds)
+    let formatter = DateComponentsFormatter()
+    formatter.zeroFormattingBehavior = .pad
+    formatter.allowedUnits = [.minute, .second]
+    formatter.unitsStyle = .positional
+    
+    return formatter.string(from: interval) ?? ""
+}
 //struct SongsForAlbumListView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        SongsForAlbumListView(songsVM: SongsForAlbumListViewModel.example())

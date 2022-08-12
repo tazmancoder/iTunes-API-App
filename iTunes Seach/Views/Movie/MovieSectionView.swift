@@ -22,7 +22,7 @@ struct MovieSectionView: View {
                             .foregroundColor(.gray)
                     }
                     .lineLimit(2)
-                    .frame(width: 100)
+                    .frame(width: 80)
                     .font(.caption)
                 }
             }

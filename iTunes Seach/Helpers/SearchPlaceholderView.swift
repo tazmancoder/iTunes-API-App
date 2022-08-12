@@ -2,29 +2,29 @@
 //  SearchPlaceholderView.swift
 //  iTunes Seach
 //
-//  Created by Mark Perryman on 8/11/22.
+//  Created by Mark Perryman on 8/12/22.
 //
 
 import SwiftUI
 
 struct SearchPlaceholderView: View {
+    
     @Binding var searchTerm: String
-    let suggestions = ["Country", "Heavy Metal", "Jazz", "Soft Rock"]
-
+    let suggestions = ["rammstein", "cry to me", "maneskin"]
+    
     var body: some View {
-        VStack {
-            Text("Search Suggestions")
-                .font(.title)
-                .padding(20)
+        VStack(spacing: 20) {
             
+            Text("Trending")
+                .font(.title)
             ForEach(suggestions, id: \.self) { text in
-                Button(action: { searchTerm = text }, label: {
+                Button {
+                    searchTerm = text
+                } label: {
                     Text(text)
                         .font(.title2)
-                })
+                }
             }
-            
-            Spacer()
         }
     }
 }

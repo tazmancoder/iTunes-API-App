@@ -22,9 +22,11 @@ struct SongRowView: View {
             }
             .lineLimit(1)
             
-            Spacer()
+            Spacer(minLength: 20)
             
-            BuySongButton(urlString: song.previewURL, price: song.trackPrice, currency: song.currency)
+            BuySongButton(urlString: song.previewURL,
+                          price: song.trackPrice,
+                          currency: song.currency)
         }
     }
 }

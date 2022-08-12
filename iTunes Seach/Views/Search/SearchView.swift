@@ -35,7 +35,9 @@ struct SearchView: View {
                 } else {
                     switch selectedType {
                     case .all:
-                        SearchAllListView(albumListVM: albumListVM, movieListVM: movieListVM, songListVM: songListVM)
+                        SearchAllListView(albumListVM: albumListVM,
+                                          movieListVM: movieListVM,
+                                          songListVM: songListVM)
                             .onAppear {
                                 albumListVM.searchTerm = searchTerm
                                 songListVM.searchTerm = searchTerm
@@ -61,9 +63,9 @@ struct SearchView: View {
                                 
                 Spacer()
             }
+            .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always))
             .navigationTitle("Search")
             .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $searchTerm)
         }
         .onChange(of: searchTerm) { newValue in
             switch selectedType {

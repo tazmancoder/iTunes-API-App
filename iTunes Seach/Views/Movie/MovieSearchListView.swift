@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct MovieSearchView: View {
+struct MovieSearchListView: View {
     @StateObject var vm = MovieListViewModel()
     
     var body: some View {
         NavigationView {
             Group {
                 if vm.movies.isEmpty {
-                    MoviePlaceholderView(searchTerm: $vm.searchTerm)
+                    SearchPlaceholderView(searchTerm: $vm.searchTerm)
                 } else {
                     MovieListView(vm: vm)
                 }
@@ -27,7 +27,7 @@ struct MovieSearchView: View {
 
 struct MovieSearchView_Previews: PreviewProvider {
     static var previews: some View {
-        MovieSearchView()
+        MovieSearchListView()
     }
 }
 

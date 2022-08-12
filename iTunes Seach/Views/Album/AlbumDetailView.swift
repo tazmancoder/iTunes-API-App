@@ -20,50 +20,69 @@ struct AlbumDetailView: View {
     
     var body: some View {
         VStack {
-            HStack(alignment: .bottom) {
-                ImageLoadingView(urlString: album.artworkUrl100, size: 100)
-                
-                VStack(alignment: .leading) {
-                    Text(album.collectionName)
-                        .foregroundColor(.black)
-                        .font(.body)
-                    Text(album.artistName)
-                        .padding(.bottom, 5)
-                    
-                    Text(album.primaryGenreName)
-                    Text("\(album.trackCount) songs")
-                    Text("Released: \(formatDate(value: album.releaseDate))")
-                }
-                .font(.caption)
-                .foregroundColor(.gray)
-                .lineLimit(1)
-               
-                Spacer(minLength: 20)
-                BuyButton(urlString: album.collectionViewURL,
-                          price: album.collectionPrice,
-                          currency: album.currency)
-                
-            }
-            .padding()
-            
-            SongsForAlbumListView(songsVM: songsVM)
+            AlbumHeaderDetailView(album: album)
+            SongsForAlbumListView(songsVM: songsVM, selectedSong: nil)
         }
         .onAppear {
             songsVM.fetch()
         }
     }
+}
+
+struct AlbumHeaderDetailView: View {
     
-    func formatDate(value: String) -> String {
-        let dfGet = DateFormatter()
-        dfGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    let album: Album
+    
+    var body: some View {
+        HStack(alignment: .bottom) {
+            ImageLoadingView(urlString: album.artworkUrl100, size: 100)
+            
+            VStack(alignment: .leading) {
+                Text(album.collectionName)
+                    .font(.footnote)
+                    .foregroundColor(Color(.label))
+                
+                Text(album.artistName)
+                    .padding(.bottom, 5)
+                
+                Text(album.primaryGenreName)
+                Text("\(album.trackCount) songs")
+                Text("Released: \(formattedDate(value: album.releaseDate))")
+                
+            }
+            .font(.caption)
+            .foregroundColor(.gray)
+            .lineLimit(1)
+           
+            Spacer(minLength: 20)
+            BuyButton(urlString: album.collectionViewURL,
+                      price: album.collectionPrice,
+                      currency: album.currency)
+            
+        }
+        .padding()
+        .background(
+            Color(.systemBackground)
+                .edgesIgnoringSafeArea(.top)
+                .shadow(radius: 5)
+        )
+    }
+    
+    func formattedDate(value: String) -> String {
+        let dateFormatterGetter = DateFormatter()
+        // "2012-01-01T08:00:00Z"
+        dateFormatterGetter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
         
-        guard let date = dfGet.date(from: value) else { return "" }
+        guard let date = dateFormatterGetter.date(from: value) else {
+            return ""
+        }
         
-        let dfSet = DateFormatter()
-        dfSet.locale = Locale.current
-        dfSet.dateStyle = .medium
-        dfSet.timeStyle = .none
-        return dfSet.string(from: date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        
+       return dateFormatter.string(from: date)
     }
 }
 

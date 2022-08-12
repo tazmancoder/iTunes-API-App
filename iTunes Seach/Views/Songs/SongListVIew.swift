@@ -13,27 +13,14 @@ struct SongListVIew: View {
     var body: some View {
         List {
             ForEach(vm.songs) { song in
-                SongRowView(song: song)
+                NavigationLink {
+                    SongDetailView(song: song)
+                } label: {
+                    SongRowView(song: song)
+                }
             }
             
-            switch vm.state {
-            case .good:
-                Color.clear
-                    .onAppear {
-                        vm.loadMore()
-                    }
-            case .isLoading:
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .frame(maxWidth: .infinity)
-            case .loadedAll:
-                Text("No more results found")
-                    .font(.title2)
-                    .foregroundColor(.red)
-            case .error(let message):
-                Text(message)
-                    .foregroundColor(.red)
-            }
+            ListPlaceholderRowView(state: vm.state, loadMore: vm.loadMore)
         }
         .listStyle(.plain)
     }
