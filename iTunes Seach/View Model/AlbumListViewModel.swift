@@ -21,7 +21,7 @@ class AlbumListViewModel: ObservableObject {
     let limit: Int = 20
     var page: Int = 0
     
-    let service = APIService()
+    private let service = APIService()
     
     var subscriptions = Set<AnyCancellable>()
     

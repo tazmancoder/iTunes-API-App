@@ -13,7 +13,9 @@ struct AlbumListView: View {
     var body: some View {
         List {
             ForEach(vm.albums) { album in
-                AlbumRowView(album: album)
+                NavigationLink(destination: AlbumDetailView(album: album)) {
+                    AlbumRowView(album: album)
+                }
             }
             
             switch vm.state {
@@ -41,7 +43,9 @@ struct AlbumListView: View {
 
 struct AlbumListView_Previews: PreviewProvider {
     static var previews: some View {
-        AlbumListView(vm: AlbumListViewModel())
+        NavigationView {
+            AlbumListView(vm: AlbumListViewModel())
+        }
     }
 }
 
